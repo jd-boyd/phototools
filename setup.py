@@ -10,5 +10,7 @@ setup(name='phototools',
       packages = find_packages(),
       entry_points = {'console_scripts': ['pt_sort = phototools.sort:run',
                                           'pt_index_html = phototools.index_html:run',
+                                          'pt_thumb = phototools.preview:run_thumb',
+                                          'pt_preview = phototools.preview:run_preview',
                                           ]}
      )
