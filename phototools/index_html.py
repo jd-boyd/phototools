@@ -36,24 +36,26 @@ bottom="""</div>
 </body>
 </html>"""
 
-f= open("index.html", "w")
 
-pList=[]
-for p in os.walk("./full_size/"):
-    pList = p[2]
+def run():
+    f= open("index.html", "w")
 
-pList.sort()
+    pList=[]
+    for p in os.walk("./full_size/"):
+        pList = p[2]
 
-lRe = re.compile("\$i")
-bRe = re.compile("\$f")
+    pList.sort()
 
-f.write(top)
-pFirst=None
-for p in pList:
-    if not pFirst:
-        pFirst=p
-    l = lRe.sub(p, imgLine)
-    f.write(l + "\n")
+    lRe = re.compile("\$i")
+    bRe = re.compile("\$f")
 
-f.write(bRe.sub(pFirst,bottom))
-f.close()
+    f.write(top)
+    pFirst=None
+    for p in pList:
+        if not pFirst:
+            pFirst=p
+        l = lRe.sub(p, imgLine)
+        f.write(l + "\n")
+
+    f.write(bRe.sub(pFirst,bottom))
+    f.close()

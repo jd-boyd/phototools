@@ -46,8 +46,7 @@ def visitfile(file):
     dates.add(dir_time_str)
     files_map[file]=dir_time_str
 
-if __name__ == '__main__':
-
+def run():
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument('src', metavar='SRC', type=str, 
                         help='an integer for the accumulator')
@@ -95,3 +94,6 @@ if __name__ == '__main__':
         print "cp", full_src_path_file, full_dest_path_file
 
         shutil.copy(full_src_path_file, full_dest_path_file)
+
+if __name__ == '__main__':
+    run()
