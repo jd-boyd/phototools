@@ -3,11 +3,11 @@ mkdir full_size
 echo Moving originals to safe directory...
 mv *.jpg *.JPG full_size/
 echo Building thumb nails...
-bash ../../thumb.sh
+pt_thumb
 echo Building preview size...
-bash ../../preview.sh
+pt_preview
 echo Building HTML indexes...
-python ../../build.index.html.py
+pt_index_html
 echo Done.
 cd ..
 
