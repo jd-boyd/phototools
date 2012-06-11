@@ -16,11 +16,12 @@ def make_previews(path, scale):
         if not f.split('.')[-1].lower() == 'jpg':
             continue
         print "Working on", f 
-        cmd = ['convert', os.path.join('full_size', f), '-scale', scale, 'thumbs/thumb.%s' % f]
+        output_file = path + '.%s' % f
+        cmd = ['convert', os.path.join('full_size', f), '-scale', scale, path + '/' + output_file]
         print "CMD:", cmd
         ret = subprocess.call(" ".join(cmd), shell=True)
         print "RET:", ret
-  #      convert $f -scale 200x150 thumbs/thumb.`basename $f` 
+  #      convert $f -scale 200x150 previews/preview.`basename $f` 
 
 
 def run_thumb():
