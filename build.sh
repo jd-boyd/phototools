@@ -1,3 +1,11 @@
+if [ -z "$1" ] ; then
+  DIR="./"
+else
+  DIR="$1"
+fi
+
+echo Entering ${DIR}
+pushd ${DIR}
 echo Making dir for originals...
 mkdir full_size
 echo Moving originals to safe directory...
@@ -9,5 +17,6 @@ pt_preview
 echo Building HTML indexes...
 pt_index_html
 echo Done.
-cd ..
+popd
+
 
