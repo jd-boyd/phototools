@@ -1,12 +1,12 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python3
 
 import os, sys, time
 from stat import *
-import sets
+
 import shutil
 import argparse
 
-dates=sets.Set()
+dates = set()
 files_map = {}
 
 def walktree(top, callback):
@@ -17,7 +17,7 @@ def walktree(top, callback):
         pathname = os.path.join(top, f)
 
         if f[0] == ".":
-            print "Skipping hidden file: ", f
+            print("Skipping hidden file: ", f)
             continue
 
         mode = os.stat(pathname)[ST_MODE]
@@ -30,10 +30,10 @@ def walktree(top, callback):
             callback(pathname)
         else:
             # Unknown file type, print a message
-            print 'Skipping %s' % pathname
+            print('Skipping %s' % pathname)
 
 def visitfile(file):
-    print 'visiting', file
+    print('visiting', file)
     if file==sys.argv[0]:
         #Don't do anything with yourself
         return
@@ -42,20 +42,20 @@ def visitfile(file):
     time_str = time.strftime(time_fmt, time.gmtime(ts))
     time_fmt = "%b%02e"
     dir_time_str = time.strftime(time_fmt, time.gmtime(ts))
-    print time_str
+    print (time_str)
     dates.add(dir_time_str)
     files_map[file]=dir_time_str
 
 def run():
     parser = argparse.ArgumentParser(description='Process some integers.')
-    parser.add_argument('src', metavar='SRC', type=str, 
+    parser.add_argument('src', metavar='SRC', type=str,
                         help='an integer for the accumulator')
-    
-    parser.add_argument('dest', metavar='DEST', type=str, 
+
+    parser.add_argument('dest', metavar='DEST', type=str,
                         help='an integer for the accumulator')
-    
+
     args = parser.parse_args()
-    print args
+    print(args)
 #    sys.exit(0)
 
     if not args.src[-1] == "/":
@@ -66,22 +66,21 @@ def run():
 
     walktree(args.src, visitfile)
 
-    print repr(files_map)
-    print repr(dates)
+    print(repr(files_map))
+    print(repr(dates))
 
-    for d in dates: 
+    for d in dates:
         dir_path = args.dest + d
         try:
             mode = os.stat(dir_path)[ST_MODE]
             if S_ISDIR(mode):
-                print d, "already existed."
+                print(d, "already existed.")
             else:
-                print d, "already existed, but is not a directory."
+                print(d, "already existed, but is not a directory.")
                 sys.exit(-1)
-        except OSError as ose:
-            if ose[0]==2: #Simple path error, expected
-                print "mkdir", dir_path
-                os.mkdir(args.dest+d)
+        except FileNotFoundError:
+            print("mkdir", dir_path)
+            os.mkdir(args.dest+d)
 
     for f in files_map:
         d = files_map[f]
@@ -91,9 +90,9 @@ def run():
         full_src_path_file = f
         full_dest_path_file = args.dest + d +  "/" + filename
 
-        print "cp", full_src_path_file, full_dest_path_file
+        print("cp", full_src_path_file, full_dest_path_file)
 
-        shutil.copy(full_src_path_file, full_dest_path_file)
+        shutil.copy2(full_src_path_file, full_dest_path_file)
 
 if __name__ == '__main__':
     run()

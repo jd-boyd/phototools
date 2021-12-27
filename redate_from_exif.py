@@ -1,7 +1,4 @@
-#!/usr/bin/python
-
 import sys
-#import EXIF
 from PIL import Image
 from PIL.ExifTags import TAGS
 from datetime import *
@@ -18,30 +15,33 @@ def get_tag(req, img):
 
 # Loop on arguments (files)
 for arg in sys.argv[1:] :
-    
+
     # Do nothing of dirs
     if os.path.isdir(arg) :
         continue
 
     if arg.lower().endswith("cr2"):
         ret = check_output(["dcraw", "-v", "-i", arg])
-        date = dict([tuple([f.split(":")[0], ":".join(f.split(":")[1:])]) 
+        date = dict([tuple([f.split(":")[0], ":".join(f.split(":")[1:])])
                      for f in ret.split("\n") if f])["Timestamp"].strip()
         #Wed Feb 19 19:57:29 2014
         date = datetime(*(time.strptime(date, "%a %b %d %H:%M:%S %Y")[0:6]))
     else:
         # Open the file
         img = Image.open(arg)
-        date = get_tag("DateTimeOriginal", img)
-        
+        try:
+            date = get_tag("DateTimeOriginal", img)
+        except Exception as e:
+            print("Failed to get DateTimeOriginal on", arg, e)
+            continue
+
         date = datetime(*(time.strptime(date, "%Y:%m:%d %H:%M:%S")[0:6]))
 
     timestamp = int(time.mktime(date.timetuple()))
-    
+
     # Some traces
-    print "File:%s - Ts:%s " % (arg, timestamp)
-    print "File:%s - DateTime:%s " % (arg, date)
+    print("File:%s - Ts:%s " % (arg, timestamp))
+    print("File:%s - DateTime:%s " % (arg, date))
 
     # Change the date
     os.utime(arg, (timestamp, timestamp))
-
