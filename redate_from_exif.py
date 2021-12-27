@@ -13,6 +13,15 @@ def get_tag(req, img):
             return xf[tag]
     raise KeyError("%r not found in image" % req)
 
+def line_to_pair(l):
+    return [l.split(b":")[0], b":".join(l.split(b":")[1:])]
+
+def dcraw_dict(arg):
+    ret = check_output(["dcraw", "-v", "-i", arg])
+    ar = [tuple(line_to_pair(f))
+                     for f in ret.split(b"\n") if f]
+    return dict(ar)
+
 # Loop on arguments (files)
 for arg in sys.argv[1:] :
 
@@ -21,9 +30,8 @@ for arg in sys.argv[1:] :
         continue
 
     if arg.lower().endswith("cr2"):
-        ret = check_output(["dcraw", "-v", "-i", arg])
-        date = dict([tuple([f.split(":")[0], ":".join(f.split(":")[1:])])
-                     for f in ret.split("\n") if f])["Timestamp"].strip()
+        dc_date = dcraw_dict(arg)
+        date = dc_date[b"Timestamp"].strip().decode('utf-8')
         #Wed Feb 19 19:57:29 2014
         date = datetime(*(time.strptime(date, "%a %b %d %H:%M:%S %Y")[0:6]))
     else:
