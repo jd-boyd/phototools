@@ -43,7 +43,10 @@ for arg in sys.argv[1:] :
             print("Failed to get DateTimeOriginal on", arg, e)
             continue
 
-        date = datetime(*(time.strptime(date, "%Y:%m:%d %H:%M:%S")[0:6]))
+        try:
+            date = datetime(*(time.strptime(date, "%Y:%m:%d %H:%M:%S")[0:6]))
+        except Exception as e:
+            print("Failed to parse DateTimeOriginal on ", arg, e)
 
     timestamp = int(time.mktime(date.timetuple()))
 

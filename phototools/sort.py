@@ -49,10 +49,10 @@ def visitfile(file):
 def run():
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument('src', metavar='SRC', type=str,
-                        help='an integer for the accumulator')
+                        help='Source directory for images to sort by MonDD.')
 
     parser.add_argument('dest', metavar='DEST', type=str,
-                        help='an integer for the accumulator')
+                        help='Destination directory.')
 
     args = parser.parse_args()
     print(args)
